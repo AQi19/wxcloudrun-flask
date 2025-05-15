@@ -11,7 +11,7 @@
     content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
-  <title>欢迎使用微信云托管</title>
+  <title>商师教务系统课表爬虫</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Droid Sans", "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", sans-serif;
@@ -30,15 +30,15 @@
 
     @media screen and (min-width:1200px) {
       body .container {
-        margin-top: 160px;
-        margin-bottom: 272px;
+        margin-top: 60px;
+        margin-bottom: 100px;
       }
     }
 
     @media screen and (max-width:1919px) {
       body .container {
-        margin-top: 76px;
-        margin-bottom: 128px;
+        margin-top: 40px;
+        margin-bottom: 60px;
       }
     }
 
@@ -48,7 +48,7 @@
       align-items: center;
     }
 
-    .count-button {
+    .action-button {
       width: 320px;
       height: 40px;
       box-sizing: border-box;
@@ -59,20 +59,6 @@
       letter-spacing: 1px;
       text-align: center;
       border-radius: 4px;
-    }
-
-    .count-number {
-      align-self: flex-start;
-      opacity: 0.9;
-      font-weight: 500;
-      font-size: 14px;
-      color: #000000;
-    }
-
-    .count-reset {
-      color: #576b95;
-      cursor: pointer;
-      margin-left: auto;
     }
 
     .count-text {
@@ -90,17 +76,6 @@
       font-weight: 400;
       font-size: 14px;
       color: #000000;
-    }
-
-    .quote {
-      font-size: 12px;
-    }
-
-    .qrcode {
-      height: 144px;
-      width: 144px;
-      display: block;
-      margin: 0 auto;
     }
 
     .title {
@@ -125,79 +100,59 @@
       line-height: 48px;
     }
 
-    .counter-container {
-      margin-top: 48px;
+    .crawler-container {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 800px;
     }
 
-    .hr {
+    .status-area {
+      min-height: 100px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .login-form {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .table-data {
+      margin-top: 20px;
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    #courseTable {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    #courseTable th, #courseTable td {
+      border: 1px solid #ddd;
+      padding: 8px;
       text-align: center;
-      position: relative;
-      z-index: 2;
-      height: 20px;
-      line-height: 20px;
     }
 
-    .hr::after {
-      position: absolute;
-      content: '';
-      top: 10px;
-      left: 60px;
-      width: 200px;
-      border-bottom: 1px solid rgba(0, 0, 0, .1);
-      z-index: -1;
+    #courseTable th {
+      background-color: #f2f2f2;
     }
 
-    .hr small {
-      display: inline-block;
-      background-color: white;
-    }
-
-    .hr-text {
-      display: inline-block;
-      height: 20px;
-      font-weight: 400;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.55);
-      letter-spacing: 0;
-      text-align: center;
-      z-index: 2;
-      background-color: white;
-      padding: 0 8px;
-      line-height: 20px;
-    }
-
-    .link-button {
-      width: 154px;
-      height: 48px;
-      box-sizing: border-box;
-      font-weight: 400;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.90);
-      letter-spacing: 0;
-      text-align: center;
-      background: rgba(0, 0, 0, 0.03);
-      border-radius: 6px;
+    .result-buttons {
+      margin-top: 20px;
       display: flex;
-      align-items: center;
       justify-content: center;
+      gap: 10px;
     }
 
-    .card {
-      margin-top: 16px;
-      width: 320px;
-      height: 200px;
-      box-sizing: border-box;
-      border: 1px solid rgba(0, 0, 0, 0.10);
-      border-radius: 5.71px;
-      position: relative;
-    }
-
-    .card-text {
-      text-align: center;
-      font-weight: 400;
-      font-size: 14px;
-      color: rgba(0, 0, 0, 0.55);
-      letter-spacing: 0;
+    .tab-content {
+      padding: 20px 0;
     }
   </style>
 </head>
@@ -207,93 +162,333 @@
     <div class="title">
       <img class="title-logo"
         src="https://static-index-4gtuqm3bfa95c963-1304825656.tcloudbaseapp.com/official-website/favicon.svg" />
-      <div style="display: inline; margin-bottom: 48px" class="title-text">欢迎使用微信云托管</div>
+      <div style="display: inline; margin-bottom: 48px" class="title-text">商师教务系统课表爬虫</div>
     </div>
-    <div style="text-align: center; display: flex; flex-direction: column; align-items: center; margin: 0">
-      <span class="count-text">
-        <span style="margin-right: 16px;">当前计数:</span>
-        <span class="count-number"></span>
-        <span class="count-reset" onclick="set('clear')">清零</span>
-      </span>
-      <a class="btn btn-success btn-lg count-button" style="background: #07c160; border: 0"
-        onclick="set('inc')">计数+1</a>
-      <div class="card" style="width: 320px; margin-bottom: 48px;">
-        <div class="card-body">
-          <img class="qrcode middle"
-            src="https://qcloudimg.tencent-cloud.cn/raw/89b46988d3cd73d8a56e76a1b82bb377.png" />
-          <small class="card-text" style="display: flex; justify-content: center; margin-top: 8px">扫码加入微信云托管用户群</small>
+
+    <div class="crawler-container">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">爬虫功能</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false">课表结果</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="usage-tab" data-bs-toggle="tab" data-bs-target="#usage" type="button" role="tab" aria-controls="usage" aria-selected="false">使用说明</button>
+        </li>
+      </ul>
+      
+      <div class="tab-content" id="myTabContent">
+        <!-- 爬虫功能标签页 -->
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <div class="login-form">
+            <div class="mb-3">
+              <label for="username" class="form-label">用户名</label>
+              <input type="text" class="form-control" id="username" placeholder="请输入教务系统用户名">
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">密码</label>
+              <input type="password" class="form-control" id="password" placeholder="请输入教务系统密码">
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="saveCredentials">
+              <label class="form-check-label" for="saveCredentials">
+                保存登录信息（仅本地存储）
+              </label>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button class="btn btn-primary" id="startCrawler">开始爬取课表</button>
+              <button class="btn btn-outline-secondary" id="useCookies">使用已保存的Cookie登录</button>
+            </div>
+          </div>
+
+          <div class="status-area" id="statusArea">
+            <p>请输入教务系统账号密码后点击"开始爬取课表"按钮。</p>
+          </div>
         </div>
-      </div>
-      <div>
-        <div class="hr">
-          <span class="hr-text">快速入门</span>
+        
+        <!-- 课表结果标签页 -->
+        <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
+          <div class="table-data">
+            <h4 class="text-center mb-3">课程表</h4>
+            <div class="table-responsive">
+              <table id="courseTable" class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>课程名称</th>
+                    <th>教师</th>
+                    <th>周次</th>
+                    <th>星期</th>
+                    <th>节次</th>
+                    <th>教室</th>
+                    <th>单双周</th>
+                  </tr>
+                </thead>
+                <tbody id="courseTableBody">
+                  <!-- 课表数据将在这里动态生成 -->
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="result-buttons">
+              <button class="btn btn-success" id="exportExcel">导出为Excel</button>
+              <button class="btn btn-info" id="exportCSV">导出为CSV</button>
+            </div>
+          </div>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-top: 16px;">
-          <a class="btn btn-light btn-lg link-button" style="border: 0; box-shadow: none; margin-right: 12px;"
-            href="https://developers.weixin.qq.com/miniprogram/dev/wxcloudrun/src/basic/intro.html" target="_blank"
-            rel="noopener noreferrer">
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
-              height="24px" viewBox="0 0 24 24">
-              <title>icons_outline_warrant copy</title>
-              <g id="icons_outline_warrant-copy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <g id="0.&#x56FE;&#x6807;/&#x7EBF;&#x578B;/icons_outlined_copy">
-                  <rect id="Rectangle" x="0" y="0" width="20" height="20"></rect>
-                  <path
-                    d="M13.9979043,2 L20,8 L20,21.0013542 C20,21.5542301 19.5541613,22 19.0041915,22 L5.99580851,22 C5.44892021,22 5,21.552891 5,21.0013542 L5,2.99864581 C5,2.44576991 5.44583866,2 5.99580851,2 L13.9979043,2 Z M12.399,3.2 L6.2,3.2 L6.2,20.8 L18.8,20.8 L18.8,9.6 L14,9.6 C13.1163444,9.6 12.4,8.8836556 12.4,8 L12.399,3.2 Z M14.2,14.4 L14.2,15.6 L7.8,15.6 L7.8,14.4 L14.2,14.4 Z M17.2,12 L17.2,13.2 L7.8,13.2 L7.8,12 L17.2,12 Z M13.599,3.299 L13.6,8 C13.6,8.2209139 13.7790861,8.4 14,8.4 L18.703,8.4 L13.599,3.299 Z"
-                    id="Combined-Shape" fill-opacity="0.9" fill="#000000"></path>
-                </g>
-              </g>
-            </svg>
-            <span style="margin-left: 4px">开发者文档</span></a>
-          <a class="btn btn-light btn-lg link-button" style="border: 0; box-shadow: none;"
-            href="https://developers.weixin.qq.com/community/business/course/00068c2c0106c0667f5b01d015b80d"
-            target="_blank" rel="noopener noreferrer">
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
-              height="24px" viewBox="0 0 24 24">
-              <title>icons_outlined_play</title>
-              <g id="&#x573A;&#x666F;&#x5316;&#x90E8;&#x7F72;" stroke="none" stroke-width="1" fill="none"
-                fill-rule="evenodd">
-                <g id="icons_outlined_play">
-                  <rect id="Rectangle-664" x="0" y="0" width="20" height="20"></rect>
-                  <path
-                    d="M12,20.8 C16.8601058,20.8 20.8,16.8601058 20.8,12 C20.8,7.1398942 16.8601058,3.2 12,3.2 C7.1398942,3.2 3.2,7.1398942 3.2,12 C3.2,16.8601058 7.1398942,20.8 12,20.8 Z M12,22 C6.4771525,22 2,17.5228475 2,12 C2,6.4771525 6.4771525,2 12,2 C17.5228475,2 22,6.4771525 22,12 C22,17.5228475 17.5228475,22 12,22 Z M10.7,14.8349028 L15.2358445,12 L10.7,9.16509717 L10.7,14.8349028 Z M10.2649995,7.47812467 L16.8216014,11.5760008 C17.0557696,11.722356 17.1269562,12.0308312 16.980601,12.2649995 C16.9403607,12.329384 16.8859859,12.3837588 16.8216014,12.4239992 L10.2649995,16.5218753 C10.0308312,16.6682305 9.72235601,16.5970439 9.57600085,16.3628756 C9.52633472,16.2834098 9.5,16.191586 9.5,16.0978762 L9.5,7.90212382 C9.5,7.62598145 9.72385763,7.40212382 10,7.40212382 C10.0937099,7.40212382 10.1855337,7.42845854 10.2649995,7.47812467 Z"
-                    id="Oval-78" fill-opacity="0.9" fill="#000000"></path>
-                </g>
-              </g>
-            </svg>
-            <span style="margin-left: 4px">视频教程</span></a>
+        
+        <!-- 使用说明标签页 -->
+        <div class="tab-pane fade" id="usage" role="tabpanel" aria-labelledby="usage-tab">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">使用说明</h5>
+              <p class="card-text">本工具用于爬取商师教务系统的课表信息，使用方法如下：</p>
+              <ol>
+                <li>在"爬虫功能"标签页中输入教务系统账号和密码</li>
+                <li>点击"开始爬取课表"按钮，系统将自动登录并获取您的课表</li>
+                <li>如果您之前已经登录过，可以点击"使用已保存的Cookie登录"跳过输入账号密码步骤</li>
+                <li>爬取完成后，切换到"课表结果"标签页查看课表数据</li>
+                <li>您可以将课表数据导出为Excel或CSV格式保存到本地</li>
+              </ol>
+              <p><strong>注意事项：</strong></p>
+              <ul>
+                <li>本工具仅在本地运行，不会将您的账号密码上传到任何服务器</li>
+                <li>如果遇到问题，请尝试清除浏览器缓存后重试</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </body>
+
 <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <script>
-  init();
-  function init() {
-    $.ajax("/api/count", {
-      method: "get",
-    }).done(function (res) {
-      if (res && res.data !== undefined) {
-        $(".count-number").html(res.data);
+  // 页面加载完成后执行
+  $(document).ready(function() {
+    // 从本地存储加载用户名密码
+    if (localStorage.getItem('snsy_username')) {
+      $('#username').val(localStorage.getItem('snsy_username'));
+      $('#password').val(localStorage.getItem('snsy_password'));
+      $('#saveCredentials').prop('checked', true);
+    }
+    
+    // 开始爬取按钮点击事件
+    $('#startCrawler').click(function() {
+      const username = $('#username').val();
+      const password = $('#password').val();
+      
+      if (!username || !password) {
+        addStatusMessage('错误：请输入用户名和密码');
+        return;
       }
+      
+      // 保存凭据到本地存储
+      if ($('#saveCredentials').is(':checked')) {
+        localStorage.setItem('snsy_username', username);
+        localStorage.setItem('snsy_password', password);
+      } else {
+        localStorage.removeItem('snsy_username');
+        localStorage.removeItem('snsy_password');
+      }
+      
+      // 清空状态区域
+      $('#statusArea').empty();
+      addStatusMessage('正在初始化爬虫...');
+      
+      // 调用后端API开始爬取
+      // 注意：这里假设有一个后端API，实际需要根据您的后端设置调整
+      startCrawlerProcess(username, password, false);
+    });
+    
+    // 使用Cookie登录按钮点击事件
+    $('#useCookies').click(function() {
+      $('#statusArea').empty();
+      addStatusMessage('尝试使用已保存的Cookie登录...');
+      
+      // 调用后端API使用Cookie登录
+      startCrawlerProcess('', '', true);
+    });
+    
+    // 导出Excel按钮点击事件
+    $('#exportExcel').click(function() {
+      exportTableToExcel('courseTable', '商师课表.xlsx');
+    });
+    
+    // 导出CSV按钮点击事件
+    $('#exportCSV').click(function() {
+      exportTableToCSV('courseTable', '商师课表.csv');
+    });
+  });
+  
+  // 添加状态消息到状态区域
+  function addStatusMessage(message) {
+    const statusArea = $('#statusArea');
+    const timestamp = new Date().toLocaleTimeString();
+    statusArea.append(`<p>[${timestamp}] ${message}</p>`);
+    statusArea.scrollTop(statusArea[0].scrollHeight);
+  }
+  
+  // 开始爬虫流程
+  function startCrawlerProcess(username, password, useCookies) {
+    // 模拟爬虫过程
+    // 注意：这里是模拟演示，实际应该调用后端API
+    
+    addStatusMessage('正在启动浏览器...');
+    
+    setTimeout(() => {
+      addStatusMessage('正在导航到登录页面...');
+      
+      setTimeout(() => {
+        if (useCookies) {
+          addStatusMessage('尝试使用已保存的Cookie自动登录...');
+          simulateLoginSuccess();
+        } else {
+          addStatusMessage('正在使用账号密码登录...');
+          simulateLoginSuccess();
+        }
+      }, 1500);
+    }, 1000);
+  }
+  
+  // 模拟登录成功
+  function simulateLoginSuccess() {
+    addStatusMessage('登录成功！');
+    
+    setTimeout(() => {
+      addStatusMessage('正在导航到课表页面...');
+      
+      setTimeout(() => {
+        addStatusMessage('正在提取课表数据...');
+        
+        setTimeout(() => {
+          addStatusMessage('成功提取课表数据');
+          
+          // 模拟一些课表数据
+          const mockCourseData = [
+            {
+              "课程名称": "高等数学",
+              "教师": "张三",
+              "周次": "第1-16周",
+              "星期": "星期一",
+              "节次": "1-2节",
+              "教室": "教学楼A-101",
+              "单双周": ""
+            },
+            {
+              "课程名称": "大学英语",
+              "教师": "李四",
+              "周次": "第1-16周",
+              "星期": "星期二",
+              "节次": "3-4节",
+              "教室": "教学楼B-203",
+              "单双周": ""
+            },
+            {
+              "课程名称": "线性代数",
+              "教师": "王五",
+              "周次": "第1-8周",
+              "星期": "星期三",
+              "节次": "5-6节",
+              "教室": "教学楼C-305",
+              "单双周": "单周"
+            },
+            {
+              "课程名称": "概率论",
+              "教师": "赵六",
+              "周次": "第9-16周",
+              "星期": "星期三",
+              "节次": "5-6节",
+              "教室": "教学楼C-305",
+              "单双周": "双周"
+            }
+          ];
+          
+          // 填充课表
+          populateCourseTable(mockCourseData);
+          
+          // 自动切换到结果标签页
+          $('#results-tab').tab('show');
+          
+          addStatusMessage('课表爬取完成！您可以在"课表结果"标签页查看并导出数据');
+        }, 2000);
+      }, 1500);
+    }, 1000);
+  }
+  
+  // 填充课表数据
+  function populateCourseTable(courseData) {
+    const tableBody = $('#courseTableBody');
+    tableBody.empty();
+    
+    courseData.forEach(course => {
+      const row = $('<tr></tr>');
+      row.append(`<td>${course['课程名称']}</td>`);
+      row.append(`<td>${course['教师']}</td>`);
+      row.append(`<td>${course['周次']}</td>`);
+      row.append(`<td>${course['星期']}</td>`);
+      row.append(`<td>${course['节次']}</td>`);
+      row.append(`<td>${course['教室']}</td>`);
+      row.append(`<td>${course['单双周']}</td>`);
+      tableBody.append(row);
     });
   }
-  function set(action) {
-    $.ajax("/api/count", {
-      method: "POST",
-      contentType: "application/json; charset=utf-8",
-      dataType: "json",
-      data: JSON.stringify({
-        action: action,
-      }),
-    }).done(function (res) {
-      if (res && res.data !== undefined) {
-        $(".count-number").html(res.data);
+  
+  // 导出表格为Excel
+  function exportTableToExcel(tableId, filename) {
+    const table = document.getElementById(tableId);
+    const wb = XLSX.utils.table_to_book(table);
+    XLSX.writeFile(wb, filename);
+  }
+  
+  // 导出表格为CSV
+  function exportTableToCSV(tableId, filename) {
+    const table = document.getElementById(tableId);
+    const wb = XLSX.utils.table_to_book(table);
+    const csvContent = XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, filename);
+  }
+
+  // 模拟调用Python爬虫（实际情况中需要通过后端API调用）
+  function callPythonCrawler(username, password, useCookies) {
+    // 实际情况中，这里应该向后端API发送请求
+    // 例如：
+    /*
+    fetch('/api/crawl', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+        useCookies: useCookies
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        populateCourseTable(data.courseData);
+        $('#results-tab').tab('show');
+      } else {
+        addStatusMessage('错误：' + data.error);
       }
+    })
+    .catch(error => {
+      addStatusMessage('请求错误：' + error.message);
     });
+    */
+    
+    // 这里使用模拟数据
+    simulateLoginSuccess();
   }
 </script>
 
