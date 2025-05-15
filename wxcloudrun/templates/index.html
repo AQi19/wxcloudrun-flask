@@ -12,6 +12,20 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
   <title>商师教务系统课表爬虫</title>
+  
+  <!-- PyScript CSS -->
+  <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+  <!-- PyScript JS -->
+  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+  
+  <!-- 配置PyScript -->
+  <py-config>
+    packages = ["pandas", "beautifulsoup4"]
+    
+    [[fetch]]
+    files = ["crawler.py"]
+  </py-config>
+  
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Droid Sans", "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei", sans-serif;
@@ -115,33 +129,13 @@
       padding: 10px;
       margin-top: 20px;
       background-color: #f9f9f9;
+      font-family: monospace;
     }
 
     .login-form {
       margin-top: 20px;
       width: 100%;
       max-width: 400px;
-    }
-
-    .table-data {
-      margin-top: 20px;
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    #courseTable {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    #courseTable th, #courseTable td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: center;
-    }
-
-    #courseTable th {
-      background-color: #f2f2f2;
     }
 
     .result-buttons {
@@ -153,6 +147,13 @@
 
     .tab-content {
       padding: 20px 0;
+    }
+    
+    #python-output {
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -166,330 +167,93 @@
     </div>
 
     <div class="crawler-container">
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">爬虫功能</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false">课表结果</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="usage-tab" data-bs-toggle="tab" data-bs-target="#usage" type="button" role="tab" aria-controls="usage" aria-selected="false">使用说明</button>
-        </li>
-      </ul>
+      <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">运行提示</h4>
+        <p>由于浏览器安全限制，在浏览器中运行Python爬虫会受到很多限制，特别是Selenium无法在浏览器中直接运行。此页面将调用一个简化版爬虫程序进行演示。</p>
+        <hr>
+        <p class="mb-0">如需完整功能，请在本地环境运行Python脚本。</p>
+      </div>
       
-      <div class="tab-content" id="myTabContent">
-        <!-- 爬虫功能标签页 -->
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-          <div class="login-form">
-            <div class="mb-3">
-              <label for="username" class="form-label">用户名</label>
-              <input type="text" class="form-control" id="username" placeholder="请输入教务系统用户名">
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">密码</label>
-              <input type="password" class="form-control" id="password" placeholder="请输入教务系统密码">
-            </div>
-            <div class="form-check mb-3">
-              <input class="form-check-input" type="checkbox" id="saveCredentials">
-              <label class="form-check-label" for="saveCredentials">
-                保存登录信息（仅本地存储）
-              </label>
-            </div>
-            
-            <div class="d-grid gap-2">
-              <button class="btn btn-primary" id="startCrawler">开始爬取课表</button>
-              <button class="btn btn-outline-secondary" id="useCookies">使用已保存的Cookie登录</button>
-            </div>
-          </div>
-
-          <div class="status-area" id="statusArea">
-            <p>请输入教务系统账号密码后点击"开始爬取课表"按钮。</p>
-          </div>
-        </div>
-        
-        <!-- 课表结果标签页 -->
-        <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
-          <div class="table-data">
-            <h4 class="text-center mb-3">课程表</h4>
-            <div class="table-responsive">
-              <table id="courseTable" class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>课程名称</th>
-                    <th>教师</th>
-                    <th>周次</th>
-                    <th>星期</th>
-                    <th>节次</th>
-                    <th>教室</th>
-                    <th>单双周</th>
-                  </tr>
-                </thead>
-                <tbody id="courseTableBody">
-                  <!-- 课表数据将在这里动态生成 -->
-                </tbody>
-              </table>
-            </div>
-            
-            <div class="result-buttons">
-              <button class="btn btn-success" id="exportExcel">导出为Excel</button>
-              <button class="btn btn-info" id="exportCSV">导出为CSV</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- 使用说明标签页 -->
-        <div class="tab-pane fade" id="usage" role="tabpanel" aria-labelledby="usage-tab">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">使用说明</h5>
-              <p class="card-text">本工具用于爬取商师教务系统的课表信息，使用方法如下：</p>
-              <ol>
-                <li>在"爬虫功能"标签页中输入教务系统账号和密码</li>
-                <li>点击"开始爬取课表"按钮，系统将自动登录并获取您的课表</li>
-                <li>如果您之前已经登录过，可以点击"使用已保存的Cookie登录"跳过输入账号密码步骤</li>
-                <li>爬取完成后，切换到"课表结果"标签页查看课表数据</li>
-                <li>您可以将课表数据导出为Excel或CSV格式保存到本地</li>
-              </ol>
-              <p><strong>注意事项：</strong></p>
-              <ul>
-                <li>本工具仅在本地运行，不会将您的账号密码上传到任何服务器</li>
-                <li>如果遇到问题，请尝试清除浏览器缓存后重试</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+      <div class="d-grid gap-2">
+        <button id="run-crawler" class="btn btn-primary">运行Python爬虫程序</button>
+      </div>
+      
+      <div class="status-area" id="python-output">
+        <!-- Python输出将显示在这里 -->
+        等待运行Python程序...
       </div>
     </div>
   </div>
+  
+  <!-- 嵌入简化版本的Python爬虫代码 -->
+  <py-script>
+# 引入必要的库
+import js
+from pyodide.ffi import create_proxy
+import sys
+from io import StringIO
+
+# 重定向标准输出到自定义对象
+class OutputCapture:
+    def __init__(self):
+        self.output = StringIO()
+    
+    def write(self, text):
+        self.output.write(text)
+        # 更新HTML上的输出区域
+        output_element = js.document.getElementById("python-output")
+        if output_element:
+            current_text = output_element.textContent
+            output_element.textContent = current_text + text
+    
+    def flush(self):
+        pass
+
+# 设置捕获
+output_capture = OutputCapture()
+sys.stdout = output_capture
+
+# 模拟爬虫程序
+def run_simplified_crawler():
+    print("正在启动商师教务系统课表爬虫程序...\n")
+    
+    print("初始化爬虫...\n")
+    
+    print("注意：完整功能需要在本地环境运行，浏览器环境无法运行Selenium和访问本地文件系统。\n")
+    
+    print("模拟爬虫流程：")
+    print("1. 访问登录页面")
+    print("2. 尝试使用Cookies登录")
+    print("3. 如果Cookies无效，进行手动登录")
+    print("4. 导航到课表页面")
+    print("5. 提取课表数据")
+    print("6. 保存为Excel文件\n")
+    
+    print("由于浏览器安全限制，实际爬虫功能无法在此环境运行。")
+    print("请在本地Python环境中运行完整的爬虫程序。\n")
+    
+    print("如需在本地运行，请使用以下步骤：")
+    print("1. 确保安装了必要的Python包: pip install pandas selenium beautifulsoup4")
+    print("2. 下载适合您系统的Chrome驱动")
+    print("3. 在命令行运行: python crawler.py")
+
+# 设置按钮点击事件
+def on_button_click(event):
+    # 清空输出区域
+    js.document.getElementById("python-output").textContent = ""
+    # 运行爬虫
+    run_simplified_crawler()
+
+# 注册按钮点击事件
+button = js.document.getElementById("run-crawler")
+click_proxy = create_proxy(on_button_click)
+button.addEventListener("click", click_proxy)
+  </py-script>
+  
 </body>
 
 <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
-<script>
-  // 页面加载完成后执行
-  $(document).ready(function() {
-    // 从本地存储加载用户名密码
-    if (localStorage.getItem('snsy_username')) {
-      $('#username').val(localStorage.getItem('snsy_username'));
-      $('#password').val(localStorage.getItem('snsy_password'));
-      $('#saveCredentials').prop('checked', true);
-    }
-    
-    // 开始爬取按钮点击事件
-    $('#startCrawler').click(function() {
-      const username = $('#username').val();
-      const password = $('#password').val();
-      
-      if (!username || !password) {
-        addStatusMessage('错误：请输入用户名和密码');
-        return;
-      }
-      
-      // 保存凭据到本地存储
-      if ($('#saveCredentials').is(':checked')) {
-        localStorage.setItem('snsy_username', username);
-        localStorage.setItem('snsy_password', password);
-      } else {
-        localStorage.removeItem('snsy_username');
-        localStorage.removeItem('snsy_password');
-      }
-      
-      // 清空状态区域
-      $('#statusArea').empty();
-      addStatusMessage('正在初始化爬虫...');
-      
-      // 调用后端API开始爬取
-      // 注意：这里假设有一个后端API，实际需要根据您的后端设置调整
-      startCrawlerProcess(username, password, false);
-    });
-    
-    // 使用Cookie登录按钮点击事件
-    $('#useCookies').click(function() {
-      $('#statusArea').empty();
-      addStatusMessage('尝试使用已保存的Cookie登录...');
-      
-      // 调用后端API使用Cookie登录
-      startCrawlerProcess('', '', true);
-    });
-    
-    // 导出Excel按钮点击事件
-    $('#exportExcel').click(function() {
-      exportTableToExcel('courseTable', '商师课表.xlsx');
-    });
-    
-    // 导出CSV按钮点击事件
-    $('#exportCSV').click(function() {
-      exportTableToCSV('courseTable', '商师课表.csv');
-    });
-  });
-  
-  // 添加状态消息到状态区域
-  function addStatusMessage(message) {
-    const statusArea = $('#statusArea');
-    const timestamp = new Date().toLocaleTimeString();
-    statusArea.append(`<p>[${timestamp}] ${message}</p>`);
-    statusArea.scrollTop(statusArea[0].scrollHeight);
-  }
-  
-  // 开始爬虫流程
-  function startCrawlerProcess(username, password, useCookies) {
-    // 模拟爬虫过程
-    // 注意：这里是模拟演示，实际应该调用后端API
-    
-    addStatusMessage('正在启动浏览器...');
-    
-    setTimeout(() => {
-      addStatusMessage('正在导航到登录页面...');
-      
-      setTimeout(() => {
-        if (useCookies) {
-          addStatusMessage('尝试使用已保存的Cookie自动登录...');
-          simulateLoginSuccess();
-        } else {
-          addStatusMessage('正在使用账号密码登录...');
-          simulateLoginSuccess();
-        }
-      }, 1500);
-    }, 1000);
-  }
-  
-  // 模拟登录成功
-  function simulateLoginSuccess() {
-    addStatusMessage('登录成功！');
-    
-    setTimeout(() => {
-      addStatusMessage('正在导航到课表页面...');
-      
-      setTimeout(() => {
-        addStatusMessage('正在提取课表数据...');
-        
-        setTimeout(() => {
-          addStatusMessage('成功提取课表数据');
-          
-          // 模拟一些课表数据
-          const mockCourseData = [
-            {
-              "课程名称": "高等数学",
-              "教师": "张三",
-              "周次": "第1-16周",
-              "星期": "星期一",
-              "节次": "1-2节",
-              "教室": "教学楼A-101",
-              "单双周": ""
-            },
-            {
-              "课程名称": "大学英语",
-              "教师": "李四",
-              "周次": "第1-16周",
-              "星期": "星期二",
-              "节次": "3-4节",
-              "教室": "教学楼B-203",
-              "单双周": ""
-            },
-            {
-              "课程名称": "线性代数",
-              "教师": "王五",
-              "周次": "第1-8周",
-              "星期": "星期三",
-              "节次": "5-6节",
-              "教室": "教学楼C-305",
-              "单双周": "单周"
-            },
-            {
-              "课程名称": "概率论",
-              "教师": "赵六",
-              "周次": "第9-16周",
-              "星期": "星期三",
-              "节次": "5-6节",
-              "教室": "教学楼C-305",
-              "单双周": "双周"
-            }
-          ];
-          
-          // 填充课表
-          populateCourseTable(mockCourseData);
-          
-          // 自动切换到结果标签页
-          $('#results-tab').tab('show');
-          
-          addStatusMessage('课表爬取完成！您可以在"课表结果"标签页查看并导出数据');
-        }, 2000);
-      }, 1500);
-    }, 1000);
-  }
-  
-  // 填充课表数据
-  function populateCourseTable(courseData) {
-    const tableBody = $('#courseTableBody');
-    tableBody.empty();
-    
-    courseData.forEach(course => {
-      const row = $('<tr></tr>');
-      row.append(`<td>${course['课程名称']}</td>`);
-      row.append(`<td>${course['教师']}</td>`);
-      row.append(`<td>${course['周次']}</td>`);
-      row.append(`<td>${course['星期']}</td>`);
-      row.append(`<td>${course['节次']}</td>`);
-      row.append(`<td>${course['教室']}</td>`);
-      row.append(`<td>${course['单双周']}</td>`);
-      tableBody.append(row);
-    });
-  }
-  
-  // 导出表格为Excel
-  function exportTableToExcel(tableId, filename) {
-    const table = document.getElementById(tableId);
-    const wb = XLSX.utils.table_to_book(table);
-    XLSX.writeFile(wb, filename);
-  }
-  
-  // 导出表格为CSV
-  function exportTableToCSV(tableId, filename) {
-    const table = document.getElementById(tableId);
-    const wb = XLSX.utils.table_to_book(table);
-    const csvContent = XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]);
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    saveAs(blob, filename);
-  }
-
-  // 模拟调用Python爬虫（实际情况中需要通过后端API调用）
-  function callPythonCrawler(username, password, useCookies) {
-    // 实际情况中，这里应该向后端API发送请求
-    // 例如：
-    /*
-    fetch('/api/crawl', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-        useCookies: useCookies
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        populateCourseTable(data.courseData);
-        $('#results-tab').tab('show');
-      } else {
-        addStatusMessage('错误：' + data.error);
-      }
-    })
-    .catch(error => {
-      addStatusMessage('请求错误：' + error.message);
-    });
-    */
-    
-    // 这里使用模拟数据
-    simulateLoginSuccess();
-  }
-</script>
 
 </html>
